@@ -1,0 +1,21 @@
+version: '3'
+services:
+  product:
+    container_name: e-book-product
+    image: 795944069014.dkr.ecr.us-east-2.amazonaws.com/product_demo:0.0.1-SNAPSHOT
+    ports:
+      - "8083:8083"
+    # 设置权限 ：拥有root权限
+    privileged: true
+
+    networks:
+      - default
+
+    depends_on:
+      - mysql
+      - eureka
+
+networks:
+  default:
+    external:
+      name: jadennet

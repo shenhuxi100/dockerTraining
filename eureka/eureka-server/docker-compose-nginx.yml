@@ -1,0 +1,28 @@
+#docker compse 的配置文件包含3大部分：version services networks
+version: '3'
+services:
+  # 服务名称
+  nginx:
+    # 容器名称
+    container_name: nginx
+    # 镜像名称
+    image: nginx:latest
+    # 暴露的端口号
+    ports:
+      - "80:80"
+      - "443:443"
+    # 设置卷挂载的路径 /opt/data代表的是日志存储路径
+    volumes:
+      - ./data/nginx/conf.d:/etc/nginx/conf.d
+    # 设置权限 ：拥有root权限
+    privileged: true
+
+    restart: always
+    links:
+      - product
+    networks:
+      - jadennet
+
+networks:
+  jadennet:
+    external: true

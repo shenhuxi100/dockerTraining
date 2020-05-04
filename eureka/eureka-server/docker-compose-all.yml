@@ -1,0 +1,92 @@
+# Docker Compose 配置文件，包含3大部分 version、services、networks
+version: '3'
+services:
+  # 服务名称
+  mysql:
+    # 容器名称
+    container_name: mysql
+    # 镜像名称
+    image: mysql:5.7
+    restart: always
+    # 暴露端口
+    ports:
+      - "3306:3306"
+    # 设置卷挂载路径
+    volumes:
+      - ./data/volume/mysql:/opt/data
+    # 环境变量
+    environment:
+      MYSQL_USER: root
+      MYSQL_PASSWORD: agan
+      MYSQL_ROOT_PASSWORD: agan
+
+    # 设置权限 ：拥有root权限
+    privileged: true
+
+    networks:
+      - dbnet
+
+  # 服务名称
+  eureka:
+    # 容器名称
+    container_name: eureka-server
+    # 镜像名称
+    image: 795944069014.dkr.ecr.us-east-2.amazonaws.com/jaden_demo:0.0.1-SNAPSHOT
+    # 暴露的端口号
+    ports:
+      - "8761:8761"
+    # 设置卷挂载的路径 /opt/data代表的是日志存储路径
+    volumes:
+      - ./data/volume/eureka:/opt/data
+    # 设置权限 ：拥有root权限
+    privileged: true
+
+    networks:
+      - jadennet
+
+  product:
+    container_name: e-book-product
+    image: 795944069014.dkr.ecr.us-east-2.amazonaws.com/product_demo:0.0.1-SNAPSHOT
+    ports:
+      - "8083:8083"
+    # 设置权限 ：拥有root权限
+    privileged: true
+
+    networks:
+      - jadennet
+      - dbnet
+
+    links:
+      - mysql
+      - eureka
+  # 服务名称
+  nginx:
+    # 容器名称
+    container_name: nginx
+    # 镜像名称
+    image: nginx:latest
+    # 暴露的端口号
+    ports:
+      - "80:80"
+      - "443:443"
+    # 设置卷挂载的路径 /opt/data代表的是日志存储路径
+    volumes:
+      - ./data/nginx/conf.d:/etc/nginx/conf.d
+    # 设置权限 ：拥有root权限
+    privileged: true
+
+    restart: always
+    links:
+      - product
+      - eureka
+    networks:
+      - jadennet
+#networks:
+#  default:
+#    external:
+#      name: jadennet
+networks:
+  jadennet:
+    external: true
+  dbnet:
+    external: true
