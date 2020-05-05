@@ -40,7 +40,7 @@ services:
       - ./data/volume/eureka:/opt/data
     # 设置权限 ：拥有root权限
     privileged: true
-
+    restart: always
     networks:
       - jadennet
 
@@ -49,9 +49,11 @@ services:
     image: 795944069014.dkr.ecr.us-east-2.amazonaws.com/product_demo:0.0.1-SNAPSHOT
     ports:
       - "8083:8083"
+    volumes:
+      - ./data/volume/product:/opt/data
     # 设置权限 ：拥有root权限
     privileged: true
-
+    restart: always
     networks:
       - jadennet
       - dbnet
@@ -74,7 +76,6 @@ services:
       - ./data/nginx/conf.d:/etc/nginx/conf.d
     # 设置权限 ：拥有root权限
     privileged: true
-
     restart: always
     links:
       - product
