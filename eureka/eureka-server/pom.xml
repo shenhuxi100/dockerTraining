@@ -30,6 +30,58 @@
 	</dependencies>
 
 
+<!--	<build>-->
+<!--		<plugins>-->
+<!--			<plugin>-->
+<!--				<groupId>org.springframework.boot</groupId>-->
+<!--				<artifactId>spring-boot-maven-plugin</artifactId>-->
+<!--			</plugin>-->
+<!--			&lt;!&ndash; 添加docker maven插件 &ndash;&gt;-->
+<!--			<plugin>-->
+<!--				<groupId>com.spotify</groupId>-->
+<!--				<artifactId>docker-maven-plugin</artifactId>-->
+<!--				<version>1.1.1</version>-->
+<!--				&lt;!&ndash;docker镜像相关的配置信息 &ndash;&gt;-->
+<!--				<configuration>-->
+<!--					&lt;!&ndash; 与maven配置文件settings.xml中配置的server.id一致，用于推送镜像 &ndash;&gt;-->
+<!--					<serverId>jaden-demo</serverId>-->
+<!--					&lt;!&ndash;私有仓库地址 &ndash;&gt;-->
+<!--					<registryUrl>795944069014.dkr.ecr.us-east-2.amazonaws.com</registryUrl>-->
+<!--					&lt;!&ndash;镜像名，这里用工程名 &ndash;&gt;-->
+<!--					<imageName>795944069014.dkr.ecr.us-east-2.amazonaws.com/jaden_demo:${project.version}</imageName>-->
+<!--&lt;!&ndash;					<serverId>eureka_server_demo</serverId>&ndash;&gt;-->
+<!--&lt;!&ndash;					&lt;!&ndash;私有仓库地址 &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;					<registryUrl>494526681395.dkr.ecr.ap-southeast-1.amazonaws.com</registryUrl>&ndash;&gt;-->
+<!--&lt;!&ndash;					&lt;!&ndash;镜像名，这里用工程名 &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;					<imageName>494526681395.dkr.ecr.ap-southeast-1.amazonaws.com/eureka_server_demo:${project.version}</imageName>&ndash;&gt;-->
+
+<!--					&lt;!&ndash; 指定基础镜像 类似dockerfile的FROM指令 &ndash;&gt;-->
+<!--					<baseImage>java:8</baseImage>-->
+<!--					&lt;!&ndash; 配置容器启动后，执行什么命令，等于与 dockerfile的ENTRYPOINT &ndash;&gt;-->
+<!--					<entryPoint>["java", "-jar", "/${project.build.finalName}.jar"]</entryPoint>-->
+<!--					&lt;!&ndash; 为dockerde tag指定版本号、latest &ndash;&gt;-->
+<!--					<imageTags>-->
+<!--						<imageTag>${project.version}</imageTag>-->
+<!--					</imageTags>-->
+<!--					&lt;!&ndash; 是否有push的功能 true代表有 &ndash;&gt;-->
+<!--					<pushImage>true</pushImage>-->
+<!--					&lt;!&ndash; push后是否覆盖已存在的标签镜像 &ndash;&gt;-->
+<!--					<forceTags>true</forceTags>-->
+<!--					&lt;!&ndash; 复制jar包到docker容器指定的目录 &ndash;&gt;-->
+<!--					<resources>-->
+<!--						<resource>-->
+<!--							<targetPath>/</targetPath>-->
+<!--							&lt;!&ndash; 指定要复制jar包的根目录，${project.build.directory}代表 target的目录 &ndash;&gt;-->
+<!--							<directory>${project.build.directory}</directory>-->
+<!--							&lt;!&ndash; 指定要复制的文件，${project.build.finalName}代表打包后的jar &ndash;&gt;-->
+<!--							<include>${project.build.finalName}.jar</include>-->
+<!--						</resource>-->
+<!--					</resources>-->
+<!--				</configuration>-->
+<!--			</plugin>-->
+<!--		</plugins>-->
+<!--	</build>-->
+
 	<build>
 		<plugins>
 			<plugin>
@@ -41,32 +93,25 @@
 				<groupId>com.spotify</groupId>
 				<artifactId>docker-maven-plugin</artifactId>
 				<version>1.1.1</version>
-				<!--docker镜像相关的配置信息 -->
 				<configuration>
-					<!-- 与maven配置文件settings.xml中配置的server.id一致，用于推送镜像 -->
-					<serverId>jaden-demo</serverId>
-					<!--私有仓库地址 -->
-					<registryUrl>795944069014.dkr.ecr.us-east-2.amazonaws.com</registryUrl>
-					<!--镜像名，这里用工程名 -->
-					<imageName>795944069014.dkr.ecr.us-east-2.amazonaws.com/jaden_demo:${project.version}</imageName>
-<!--					<serverId>eureka_server_demo</serverId>-->
-<!--					&lt;!&ndash;私有仓库地址 &ndash;&gt;-->
-<!--					<registryUrl>494526681395.dkr.ecr.ap-southeast-1.amazonaws.com</registryUrl>-->
-<!--					&lt;!&ndash;镜像名，这里用工程名 &ndash;&gt;-->
-<!--					<imageName>494526681395.dkr.ecr.ap-southeast-1.amazonaws.com/eureka_server_demo:${project.version}</imageName>-->
-
+					<!-- 推送到指定的仓库 -->
+					<registryUrl>localhost:5000</registryUrl>
+					<!-- 开启docker远程API的端口 -->
+<!--					<dockerHost>http://localhost:5000</dockerHost>-->
+					<!-- 指定镜像名称 格式：仓库域名：端口/镜像名字：镜像的版本号 -->
+					<imageName>localhost:5000/${project.artifactId}:${project.version}</imageName>
 					<!-- 指定基础镜像 类似dockerfile的FROM指令 -->
 					<baseImage>java:8</baseImage>
 					<!-- 配置容器启动后，执行什么命令，等于与 dockerfile的ENTRYPOINT -->
 					<entryPoint>["java", "-jar", "/${project.build.finalName}.jar"]</entryPoint>
 					<!-- 为dockerde tag指定版本号、latest -->
 					<imageTags>
-						<imageTag>${project.version}</imageTag>
+						<imageTag>0.0.2</imageTag>
 					</imageTags>
 					<!-- 是否有push的功能 true代表有 -->
-					<pushImage>true</pushImage>
+					<pushImage>false</pushImage>
 					<!-- push后是否覆盖已存在的标签镜像 -->
-					<forceTags>true</forceTags>
+					<forceTags>false</forceTags>
 					<!-- 复制jar包到docker容器指定的目录 -->
 					<resources>
 						<resource>
